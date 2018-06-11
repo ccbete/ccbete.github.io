@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="nginx tomcat," />
 
 
 
@@ -79,13 +79,18 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="ccbeta&#39;s Home">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta name="description" content="介绍了nginx+tomcat使用粘性会话搭建的集群，这种方案确实可以解决nginx+tomcat进行负载均衡时，对于有状态的应用每次轮询造成session信息丢失的问题。但是，这种解决方案还是有一定的缺陷：当绑定会话的那个后端tomcat倒了，和该tomcat粘连的用户就无法正确获取服务（有可能出现session信息丢失）。  下面，我们研究一种更加稳固的解决方案：session共享（如下图）">
+<meta name="keywords" content="nginx tomcat">
+<meta property="og:type" content="article">
+<meta property="og:title" content="nginx+tomcat+redis实现多台tomcat服务器session共享">
+<meta property="og:url" content="http://yoursite.com/2018/06/11/nginx-tomcat/index.html">
 <meta property="og:site_name" content="ccbeta&#39;s Home">
+<meta property="og:description" content="介绍了nginx+tomcat使用粘性会话搭建的集群，这种方案确实可以解决nginx+tomcat进行负载均衡时，对于有状态的应用每次轮询造成session信息丢失的问题。但是，这种解决方案还是有一定的缺陷：当绑定会话的那个后端tomcat倒了，和该tomcat粘连的用户就无法正确获取服务（有可能出现session信息丢失）。  下面，我们研究一种更加稳固的解决方案：session共享（如下图）">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-06-11T08:55:13.222Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ccbeta&#39;s Home">
+<meta name="twitter:title" content="nginx+tomcat+redis实现多台tomcat服务器session共享">
+<meta name="twitter:description" content="介绍了nginx+tomcat使用粘性会话搭建的集群，这种方案确实可以解决nginx+tomcat进行负载均衡时，对于有状态的应用每次轮询造成session信息丢失的问题。但是，这种解决方案还是有一定的缺陷：当绑定会话的那个后端tomcat倒了，和该tomcat粘连的用户就无法正确获取服务（有可能出现session信息丢失）。  下面，我们研究一种更加稳固的解决方案：session共享（如下图）">
 
 
 
@@ -115,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/06/11/nginx-tomcat/"/>
 
 
 
 
 
-  <title>ccbeta's Home</title>
+  <title>nginx+tomcat+redis实现多台tomcat服务器session共享 | ccbeta's Home</title>
   
 
 
@@ -140,8 +145,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -214,9 +218,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -246,9 +250,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/06/11/nginx-tomcat/" itemprop="url">nginx+tomcat+redis实现多台tomcat服务器session共享</a></h1>
+          <h1 class="post-title" itemprop="name headline">nginx+tomcat+redis实现多台tomcat服务器session共享</h1>
         
 
         <div class="post-meta">
@@ -298,9 +300,7 @@
       
 
       
-        
-          
-            <p>介绍了nginx+tomcat使用粘性会话搭建的集群，这种方案确实可以解决nginx+tomcat进行负载均衡时，对于有状态的应用每次轮询造成session信息丢失的问题。但是，这种解决方案还是有一定的缺陷：当绑定会话的那个后端tomcat倒了，和该tomcat粘连的用户就无法正确获取服务（有可能出现session信息丢失）。</p>
+        <p>介绍了nginx+tomcat使用粘性会话搭建的集群，这种方案确实可以解决nginx+tomcat进行负载均衡时，对于有状态的应用每次轮询造成session信息丢失的问题。但是，这种解决方案还是有一定的缺陷：当绑定会话的那个后端tomcat倒了，和该tomcat粘连的用户就无法正确获取服务（有可能出现session信息丢失）。</p>
 <p> 下面，我们研究一种更加稳固的解决方案：session共享（如下图）<br> <a href="http://ww1.sinaimg.cn/mw690/72c913fbjw1ez039bhdxhj20go043t8s.jpg" target="_blank" rel="noopener">http://ww1.sinaimg.cn/mw690/72c913fbjw1ez039bhdxhj20go043t8s.jpg</a></p>
 <p> 配置过程</p>
 <p>0、实验环境介绍：<br>Centos6、nginx-1.6.0、apache-tomcat-7.0.27（两台）、redis_version:2.8.23</p>
@@ -348,8 +348,6 @@ location / {
 <p>5、验证：<br>    5.1: 访问 <a href="http://192.168.137.122：8080/a.jsp" target="_blank" rel="noopener">http://192.168.137.122：8080/a.jsp</a> 直接请求到tomcat_1服务器，显示 “ response from tomcat_1 ”， session 值为 ‘56E2FAE376A47F1C0961D722326B8423’；<br>    5.1: 访问 <a href="http://192.168.137.101：8080/a.jsp" target="_blank" rel="noopener">http://192.168.137.101：8080/a.jsp</a> 直接请求到tomcat_2服务器，显示 “ response from tomcat_2 ”， session 值为 ‘56E2FAE376A47F1C0961D722326B8423’；<br>    5.3: 访问 <a href="http://192.168.137.122：84/a.jsp" target="_blank" rel="noopener">http://192.168.137.122：84/a.jsp</a> 请求到 nginx 反向代理到指定Web服务器，由于默认使用轮询负载方式，反复刷新页面显示的内容在“ response from tomcat_1 ” 和 “ response from tomcat_2 ”之间切换，但 session 值保‘56E2FAE376A47F1C0961D722326B8423’；<br>    5.4: 使用 redis-cli 连接 redis 服务器，查看会显示有 “56E2FAE376A47F1C0961D722326B8423” key的 session 数据，value为序列化数据。</p>
 <p>总结:<br>    1、使用tomcat7搭建时，redis的客户端jedis版本不能太高，否则启动tomcat时会报错；我使用的是tomcat7.0.27、jedis-2.0.0.jar、tomcat-redis-session-manager-1.2-tomcat-7-java-7、commons-pool-1.3.jar<br>    2、Nginx+Redis+Tomcat集群实现session共享，配置过程简单如下：<br>        2.1: 首先搭建好单机版的tomcat将session持久化到redis中；<br>        2.2: 然后配置nginx轮询tomcat（负载均衡）；</p>
 
-          
-        
       
     </div>
     
@@ -364,443 +362,36 @@ location / {
 
     <footer class="post-footer">
       
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/11/nginx/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="ccbeta">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="ccbeta's Home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/06/11/nginx/" itemprop="url">Centos 搭建 Tengine Web 服务器高性能访问</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-11T16:47:15+08:00">
-                2018-06-11
-              </time>
-            
-
-            
-
-            
-          </span>
-
+        <div class="post-tags">
           
-
+            <a href="/tags/nginx-tomcat/" rel="tag"># nginx tomcat</a>
           
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>1、下载Tengine压缩包: <a href="http://tengine.taobao.org/download/tengine-2.2.2.tar.gz" target="_blank" rel="noopener">http://tengine.taobao.org/download/tengine-2.2.2.tar.gz</a></p>
-<p>2、解压缩: tar xf tengine-2.2.2.tar.gz &amp;&amp; cd tengine-2.2.2</p>
-<p>3、通过yum 命令安装基础环境:</p>
-<pre><code>yum -y install wget unzip vim lsof libjpeg libjpeg-devel libpng libpng-devel freetype freetype-devel gd-devel openssl openssl-devel zlib zlib-devel pcre pcre-devel
-
-3.1、编译Tengine 多个特性，合并多个文件为一个请求，去掉HTML空格,及图片处理:
-
-3.2、建立相关文件夹： mkdir -p /var/temp/tengine/client
-
-3.3、运行编译命令:  firewall-cmd --zone=public --add-port=80/tcp --permanent &amp;&amp; firewall-cmd --reload #开放80端口
-
-    groupadd www -- 添加用户www
-
-    useradd -s /sbin/nologin -g www www
-
-    ./configure --user=www --group=www --prefix=/usr/local/nginx --conf-path=/usr/local/nginx/conf/nginx.conf --pid-path=/usr/local/nginx/conf/nginx.pid --lock-path=/var/lock/nginx.lock --error-log-path=/var/log/nginx/error.log --http-log-path=/var/log/nginx/access.log --with-http_gzip_static_module --http-client-body-temp-path=/var/temp/nginx/client --http-proxy-temp-path=/var/temp/nginx/proxy --http-fastcgi-temp-path=/var/temp/nginx/fastcgi --http-uwsgi-temp-path=/var/temp/nginx/uwsgi --http-scgi-temp-path=/var/temp/nginx/scgi --with-http_concat_module --with-http_sub_module=shared --with-http_upstream_check_module --with-http_image_filter_module --with-http_trim_filter_module=shared;
-
-    make &amp;&amp; make install
-
-3.3、修改nginx配置文件: mv nginx.conf nginx.conf.bak
-
-    touch nginx.conf &amp;&amp; vim nginx.conf
-
-3.4、nginx.conf配置文件如下：
-
-    user  www www;
-    worker_processes  auto; #建议为cpu核心数+2
-
-    error_log  logs/error.log; 
-
-    pid        /usr/local/nginx/logs/nginx.pid;
-
-    worker_rlimit_nofile 65535;
-
-    events {
-        use epoll;
-        multi_accept on;
-        worker_connections  65535;
-    }
-
-
-    http {
-        include       mime.types;
-        default_type  application/octet-stream;
-
-        limit_conn_zone $binary_remote_addr zone=addr:1m;
-        limit_req_zone $binary_remote_addr zone=one:1m rate=1r/s;
-
-        server_names_hash_bucket_size 128;
-        client_header_buffer_size 32k;
-        large_client_header_buffers 4 32k;
-        client_max_body_size 50m;
-
-
-        sendfile on; 
-        tcp_nopush on; 
-        tcp_nodelay on;  
-        keepalive_timeout 60;
-        types_hash_max_size 2048;
-
-        concat on;
-         concat_max_files 20;
-         concat_unique on;
-         concat_delimiter &quot;\r\n&quot;;
-            concat_ignore_file_error on;
-
-        gzip on;
-        gzip_min_length 1k;
-        gzip_disable  &quot;MSIE [1-6]\.&quot;;
-        gzip_vary on;
-        gzip_proxied   any;
-        gzip_comp_level 6;
-        gzip_buffers     4 16k;
-        gzip_http_version 1.1;
-        gzip_types   text/plain  text/css  application/json  application/x-javascript  text/xml  application/xml  text/text/javascript;
-
-        # php 的 fastcgi配置
-        #
-        # fastcgi_connect_timeout 300;
-        # fastcgi_send_timeout 300;
-        # fastcgi_read_timeout 300;
-        # fastcgi_buffer_size 64k;
-        # fastcgi_buffers 4 64k;
-        # fastcgi_busy_buffers_size 128k;
-        # fastcgi_temp_file_write_size 256k;
-        #
-
-        proxy_redirect off;
-        proxy_set_header Host $host;
-        proxy_set_header X-real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        client_body_buffer_size 128k;
-        proxy_connect_timeout 90;
-        proxy_read_timeout 90;
-        proxy_buffer_size 4k;
-        proxy_buffers 6 32k;
-        proxy_busy_buffers_size 64k;
-        proxy_temp_file_write_size 64k;  
-        proxy_http_version 1.1;
-        proxy_set_header Connection &quot;&quot;;
-
-        #后端采用多台tomcat 负载
-        #nginx+tomcat+redis实现session共享解决后端多台tomcat负载session问题
-        upstream tomcat_server{ 
-            ip_hash; #采用ip 固定访问后端不同的tomcat服务器
-            server 192.168.10.137;
-             server 192.168.10.138;
-            server 192.168.10.139;
-            server 192.168.10.140;
-
-        }
-
-        # 配置默认80端口访问重定向到https
-        #server {  
-        #    listen 80;
-        #    server_name  www.maketea.loc;
-        #    return 301 https://www.maketea.loc$request_uri;
-        #}
-
-
-        server {
-
-                # ssl 配置
-            #listen 443 default_server ssl;
-            #ssl on;
-            #ssl_protocols                   TLSv1 TLSv1.1 TLSv1.2;
-                #ssl_certificate /usr/local/nginx/conf/web.crt;
-                #ssl_certificate_key /usr/local/nginx/conf/web.key;
-            #ssl_session_cache               shared:SSL:10m;
-                #ssl_session_timeout             10m;
-                #ssl_ciphers ALL:!kEDH!ADH:RC4+RSA:+HIGH:+EXP;
-                #优化：Nginx默认使用DHE算法来产生密匙，该加密算法效率很低。可以通过如下命令，删掉了kEDH算法。
-            #ssl_prefer_server_ciphers       on;
-
-            listen       80;
-            root /webdata/bst;
-            server_name  localhost;
-
-            charset utf-8; 
-
-            access_log  logs/access.log;    
-
-            location / {
-                proxy_http_version 1.1;
-                proxy_set_header Connection &quot;&quot;;
-                proxy_pass http://tomcat_server;
-            }
-
-            location ~ \.(html|js|css|gif|jpg|png|bmp|swf)$ {        
-                expires 30d; 
-            }  
-
-            #location /js/ {
-            #    concat on;
-            #    concat_max_files 20;
-            #}
-
-        }        
-    }
-
-    至此，nginx 配置结束
-
-3.5:添加nginx开机启动： cd /usr/lib/systemd/system/ &amp;&amp; vim nginx.service
-
-    [Unit]    
-    Description=nginx    
-    After=network.target    
-
-    [Service]    
-    Type=forking    
-    ExecStart=/usr/local/nginx/sbin/nginx   
-    ExecReload=/usr/local/nginx/sbin/nginx -s reload    
-    ExecStop=/usr/local/nginx/sbin/nginx -s stop  
-    PrivateTmp=true    
-
-    [Install]    
-    WantedBy=multi-user.target  
-
-    设置开机启动:
-
-    systemctl enable nginx.service 
-</code></pre><p>至此nginx 安装配置结束，后面文章再介绍nginx+tomcat+redis实现session共享</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
       
 
       
       
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
       
 
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/31/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="ccbeta">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="ccbeta's Home">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/31/hello-world/" itemprop="url">Hello World</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
             
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-31T14:23:33+08:00">
-                2018-05-31
-              </time>
+              <a href="/2018/06/11/nginx/" rel="next" title="Centos 搭建 Tengine Web 服务器高性能访问">
+                <i class="fa fa-chevron-left"></i> Centos 搭建 Tengine Web 服务器高性能访问
+              </a>
             
+          </div>
 
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
             
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
+          </div>
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          
-            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -810,10 +401,11 @@ location / {
   </article>
 
 
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -821,6 +413,10 @@ location / {
 
 
           
+
+  
+
+
 
         </div>
         
@@ -1026,6 +622,10 @@ location / {
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
