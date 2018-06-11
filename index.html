@@ -301,7 +301,7 @@
         
           
             <p>nginx+tomcat使用粘性会话搭建的集群，这种方案确实可以解决nginx+tomcat进行负载均衡时，对于有状态的应用每次轮询造成session信息丢失的问题。但是，这种解决方案还是有一定的缺陷：当绑定会话的那个后端tomcat倒了，和该tomcat粘连的用户就无法正确获取服务（有可能出现session信息丢失）。</p>
-<p> 下面，我们研究一种更加稳固的解决方案：session共享（如下图）<br> <img src="http://ww1.sinaimg.cn/mw690/72c913fbjw1ez039bhdxhj20go043t8s.jpg"></p>
+<p> 下面，我们研究一种更加稳固的解决方案：session共享（如下图）<br> <img src="https://ww1.sinaimg.cn/mw690/72c913fbjw1ez039bhdxhj20go043t8s.jpg"></p>
 <p> 配置过程</p>
 <p>0、实验环境介绍：<br>Centos6、nginx-1.6.0、apache-tomcat-7.0.27（两台）、redis_version:2.8.23</p>
 <p>1、安装nginx、tomcat、redis服务；</p>
