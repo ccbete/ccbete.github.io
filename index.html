@@ -684,21 +684,21 @@ location / {
 
 3.1、编译Tengine 多个特性，合并多个文件为一个请求，去掉HTML空格,及图片处理:
 
-3.2、建立相关文件夹： mkdir -p /var/temp/tengine/client
+3.2、建立相关文件夹： mkdir -p /var/temp/nginx/client &amp;&amp; 
 
-3.3、运行编译命令:  firewall-cmd --zone=public --add-port=80/tcp --permanent &amp;&amp; firewall-cmd --reload #开放80端口
+3.3、运行编译命令:  firewall-cmd --zone=public --add-port=80/tcp --permanent &amp;&amp; firewall-cmd --zone=public --add-port=443/tcp --permanent &amp;&amp; firewall-cmd --reload #开放80、443端口
 
     groupadd www -- 添加用户www
 
     useradd -s /sbin/nologin -g www www
 
-    ./configure --user=www --group=www --prefix=/usr/local/nginx --conf-path=/usr/local/nginx/conf/nginx.conf --pid-path=/usr/local/nginx/conf/nginx.pid --lock-path=/var/lock/nginx.lock --error-log-path=/var/log/nginx/error.log --http-log-path=/var/log/nginx/access.log --with-http_gzip_static_module --http-client-body-temp-path=/var/temp/nginx/client --http-proxy-temp-path=/var/temp/nginx/proxy --http-fastcgi-temp-path=/var/temp/nginx/fastcgi --http-uwsgi-temp-path=/var/temp/nginx/uwsgi --http-scgi-temp-path=/var/temp/nginx/scgi --with-http_concat_module --with-http_sub_module=shared --with-http_upstream_check_module --with-http_image_filter_module --with-http_trim_filter_module=shared;
+    ./configure --user=www --group=www --prefix=/usr/local/nginx --conf-path=/usr/local/nginx/conf/nginx.conf --pid-path=/usr/local/nginx/logs/nginx.pid --lock-path=/var/lock/nginx.lock --error-log-path=/var/log/nginx/error.log --http-log-path=/var/log/nginx/access.log --with-http_gzip_static_module --http-client-body-temp-path=/var/temp/nginx/client --http-proxy-temp-path=/var/temp/nginx/proxy --http-fastcgi-temp-path=/var/temp/nginx/fastcgi --http-uwsgi-temp-path=/var/temp/nginx/uwsgi --http-scgi-temp-path=/var/temp/nginx/scgi --with-http_concat_module --with-http_sub_module=shared --with-http_upstream_check_module --with-http_image_filter_module --with-http_trim_filter_module=shared;
 
     make &amp;&amp; make install
 
-3.3、修改nginx配置文件: mv nginx.conf nginx.conf.bak
+3.3、修改nginx配置文件: cd /usr/local/nginx &amp;&amp; mv nginx.conf nginx.conf.bak
 
-    touch nginx.conf &amp;&amp; vim nginx.conf
+    vim nginx.conf
 
 3.4、nginx.conf配置文件如下：
 
@@ -741,7 +741,7 @@ location / {
          concat_max_files 20;
          concat_unique on;
          concat_delimiter &quot;\r\n&quot;;
-            concat_ignore_file_error on;
+        concat_ignore_file_error on;
 
         gzip on;
         gzip_min_length 1k;
@@ -780,8 +780,10 @@ location / {
 
         #后端采用多台tomcat 负载
         #nginx+tomcat+redis实现session共享解决后端多台tomcat负载session问题
+        #采用ip 固定访问后端不同的tomcat服务器
+
         upstream tomcat_server{ 
-            ip_hash; #采用ip 固定访问后端不同的tomcat服务器
+            ip_hash; 
             server 192.168.10.137;
              server 192.168.10.138;
             server 192.168.10.139;
@@ -799,25 +801,25 @@ location / {
 
         server {
 
-                # ssl 配置
+            # ssl 配置
             #listen 443 default_server ssl;
             #ssl on;
-            #ssl_protocols                   TLSv1 TLSv1.1 TLSv1.2;
-                #ssl_certificate /usr/local/nginx/conf/web.crt;
-                #ssl_certificate_key /usr/local/nginx/conf/web.key;
-            #ssl_session_cache               shared:SSL:10m;
-                #ssl_session_timeout             10m;
-                #ssl_ciphers ALL:!kEDH!ADH:RC4+RSA:+HIGH:+EXP;
-                #优化：Nginx默认使用DHE算法来产生密匙，该加密算法效率很低。可以通过如下命令，删掉了kEDH算法。
+            #ssl_protocols              TLSv1 TLSv1.1 TLSv1.2;
+                #ssl_certificate             /usr/local/nginx/conf/web.crt;
+            #ssl_certificate_key         /usr/local/nginx/conf/web.key;
+            #ssl_session_cache          shared:SSL:10m;
+            #ssl_session_timeout        10m;
+            #ssl_ciphers ALL:!kEDH!ADH:RC4+RSA:+HIGH:+EXP;
+            #优化：Nginx默认使用DHE算法来产生密匙，该加密算法效率很低。可以通过如下命令，删掉了kEDH算法。
             #ssl_prefer_server_ciphers       on;
 
             listen       80;
-            root /webdata/bst;
+            root /webdata/wwwroot;
             server_name  localhost;
 
             charset utf-8; 
 
-            access_log  logs/access.log;    
+            access_log  /var/log/nginx/logs/access.log;    
 
             location / {
                 proxy_http_version 1.1;
@@ -1081,7 +1083,7 @@ location / {
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-count">2</span>
                   <span class="site-state-item-name">标签</span>
                 
               </div>
