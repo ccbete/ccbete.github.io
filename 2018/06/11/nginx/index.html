@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="1、下载Tengine压缩包: http://tengine.taobao.org/download/tengine-2.2.2.tar.gz 2、解压缩: tar xf tengine-2.2.2.tar.gz &amp;amp;&amp;amp; cd tengine-2.2.2 3、通过yum 命令安装基础环境: yum -y install wget unzip vim lsof libjpeg libj">
+<meta name="description" content="1、通过yum 命令安装基础环境: yum -y install wget unzip vim lsof libjpeg libjpeg-devel libpng libpng-devel freetype freetype-devel gd-devel openssl openssl-devel zlib zlib-devel pcre pcre-devel gcc gcc-c++ ncurse">
 <meta name="keywords" content="tengine">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Centos 搭建 Tengine Web 服务器高性能访问">
 <meta property="og:url" content="http://yoursite.com/2018/06/11/nginx/index.html">
 <meta property="og:site_name" content="ccbeta&#39;s Home">
-<meta property="og:description" content="1、下载Tengine压缩包: http://tengine.taobao.org/download/tengine-2.2.2.tar.gz 2、解压缩: tar xf tengine-2.2.2.tar.gz &amp;amp;&amp;amp; cd tengine-2.2.2 3、通过yum 命令安装基础环境: yum -y install wget unzip vim lsof libjpeg libj">
+<meta property="og:description" content="1、通过yum 命令安装基础环境: yum -y install wget unzip vim lsof libjpeg libjpeg-devel libpng libpng-devel freetype freetype-devel gd-devel openssl openssl-devel zlib zlib-devel pcre pcre-devel gcc gcc-c++ ncurse">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-06-12T05:50:42.613Z">
+<meta property="og:updated_time" content="2018-06-15T06:03:30.470Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Centos 搭建 Tengine Web 服务器高性能访问">
-<meta name="twitter:description" content="1、下载Tengine压缩包: http://tengine.taobao.org/download/tengine-2.2.2.tar.gz 2、解压缩: tar xf tengine-2.2.2.tar.gz &amp;amp;&amp;amp; cd tengine-2.2.2 3、通过yum 命令安装基础环境: yum -y install wget unzip vim lsof libjpeg libj">
+<meta name="twitter:description" content="1、通过yum 命令安装基础环境: yum -y install wget unzip vim lsof libjpeg libjpeg-devel libpng libpng-devel freetype freetype-devel gd-devel openssl openssl-devel zlib zlib-devel pcre pcre-devel gcc gcc-c++ ncurse">
 
 
 
@@ -300,12 +300,13 @@
       
 
       
-        <p>1、下载Tengine压缩包: <a href="http://tengine.taobao.org/download/tengine-2.2.2.tar.gz" target="_blank" rel="noopener">http://tengine.taobao.org/download/tengine-2.2.2.tar.gz</a></p>
-<p>2、解压缩: tar xf tengine-2.2.2.tar.gz &amp;&amp; cd tengine-2.2.2</p>
-<p>3、通过yum 命令安装基础环境:</p>
-<pre><code>yum -y install wget unzip vim lsof libjpeg libjpeg-devel libpng libpng-devel freetype freetype-devel gd-devel openssl openssl-devel zlib zlib-devel pcre pcre-devel
+        <p>1、通过yum 命令安装基础环境:</p>
+<pre><code>yum -y install wget unzip vim lsof libjpeg libjpeg-devel libpng libpng-devel freetype freetype-devel gd-devel openssl openssl-devel zlib zlib-devel pcre pcre-devel gcc gcc-c++ ncurses-devel perl
 
-3.1、编译Tengine 多个特性，合并多个文件为一个请求，去掉HTML空格,及图片处理:
+下载Tengine压缩包: wget http://tengine.taobao.org/download/tengine-2.2.2.tar.gz
+</code></pre><p>2、解压缩: tar xf tengine-2.2.2.tar.gz &amp;&amp; cd tengine-2.2.2</p>
+<p>3、具体安装步骤:</p>
+<pre><code>3.1、编译Tengine 多个特性，合并多个文件为一个请求，去掉HTML空格,及图片处理:
 
 3.2、建立相关文件夹： mkdir -p /var/temp/nginx/client &amp;&amp; 
 
