@@ -229,6 +229,206 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/16/kms-server/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ccbeta">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ccbeta's Home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/16/kms-server/" itemprop="url">自建KMS激活服务器的两种方法</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-16T14:06:52+08:00">
+                2018-06-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>你还在用网上那种坑爹的Ghost盗版系统吗？内置各种辣鸡、流氓软件，新系统？纯净版Ghost系统？不存在的~</p>
+<p>在开始自建KMS服务器之前，我觉得很有必要给大家分享一个神站，没错就是MSDN！</p>
+<p>地址：<a href="https://msdn.itellyou.cn/" target="_blank" rel="noopener">https://msdn.itellyou.cn/</a></p>
+<p>这个站活了10年，实乃良心站点，想必老网虫或多或少知道这个站。在MSDN上面我们可以下载到各个版本的微软原版系统iso：</p>
+<p><a href="https://lala.im/wp-content/uploads/2018/02/lala.im_2018-02-04-48-685.png" target="_blank" rel="noopener">https://lala.im/wp-content/uploads/2018/02/lala.im_2018-02-04-48-685.png</a></p>
+<p>原版系统iso有了，如果我们装上去就只能试用30天嘛，想一直用就得掏钱买正版授权，但是我已经穷的揭不开锅了，花不起这个钱怎么办？只能向微软耍点套路了，所以进入今天的正题：自建KMS服务器激活微软操作系统~</p>
+<p>搭建环境：CentOS7X64。</p>
+<p>标题说了是两种方法，这里分别为vlmcsd和py-kms，我就先尝试使用vlmcsd来搭建。</p>
+<p>使用Xshell登录到你的VPS内，先确定一下你这台机器的CPU架构：</p>
+<p> cat /proc/cpuinfo</p>
+<p> 一般都是Intel，毕竟技术实力摆在这里：</p>
+<p> <a href="https://lala.im/wp-content/uploads/2018/02/lala.im_2018-02-04-36-351.png" target="_blank" rel="noopener">https://lala.im/wp-content/uploads/2018/02/lala.im_2018-02-04-36-351.png</a></p>
+<p> 下载vlmcsd项目文件：</p>
+<pre><code> yum -y install wget 
+
+wget https://github.com/Wind4/vlmcsd/releases/download/svn1111/binaries.tar.gz
+
+tar xf binaries.tar.gz
+
+如果你的机器CPU和上述我的一样都是Intel，那么就可以直接用我下面的命令进入目录：
+
+cd binaries/Linux/intel/static
+
+否则你需要在binaries目录内找到对应你机器CPU架构的目录进入。
+
+这里我是X64位的系统，所以直接执行下面的命令vlmcsd就启动了：
+
+./vlmcsd-x64-musl-static
+
+如果你的机器不是64位系统，则需要在此目录内找到对应你系统位数的可执行文件来运行.
+
+查看vlmcsd的运行情况，可以使用如下命令：
+
+ps -ef | grep vlmcsd-x64-musl-static
+
+看到如图则说明运行正常：
+
+https://lala.im/wp-content/uploads/2018/02/lala.im_2018-02-04-40-561.png
+
+注意，vlmcsd需要用到1688端口，如果你的机器防火墙打开了，需要设置放行规则或者关闭：
+
+systemctl stop firewalld.service
+
+至此，vlmcsd的搭建就完成了。
+
+激活步骤：
+
+1、使用管理员权限运行CMD：
+
+2、在CMD内键入如下命令： slmgr /skms 这里填写你的VPS公网IP或是解析到此IP的域名
+
+3、继续在CMD内键入如下命令：slmgr /ato
+
+稍等几秒钟，不出意外的话可以看到如图所示的激活成功提示：
+
+4、最后一个命令： slmgr /xpr
+
+OK，现在打开电脑设置看看激活是否成功.
+</code></pre><p>下面再来稍微写一下用另外一种方法py-kms搭建KMS激活服务器。</p>
+<p>注意：py-kms需要Python2.6或2.7版本，如果你的机器内不是这个版本，就最好不要用这个方法了。不过CentOS系统的话，无论是6系还是7系都是默认装好2.6或2.7的，不用担心这个。</p>
+<pre><code>先安装git： yum -y install git
+
+拉取py-kms项目文件： git clone https://github.com/myanaloglife/py-kms.git
+
+安装py-kms所需依赖： yum -y install python-argparse
+
+进入到py-kms根目录： cd py-kms
+
+运行程序： python server.py
+
+看到如下图回显就说明程序启动成功了：https://lala.im/wp-content/uploads/2018/02/lala.im_2018-02-04-04-541.png
+
+Ctrl+C退出来，安装screen： yum -y install screen
+
+使用screen将py-kms放到后台运行：screen -dmS jihuo python server.py
+
+查看py-kms运行状态： ps -ef | grep jihuo
+
+如图所示：https://lala.im/wp-content/uploads/2018/02/lala.im_2018-02-04-30-240.png
+
+至此py-kms就搭建好了，激活微软各类操作系统的办法和之前介绍的一样。
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/16/redhat-change-yum/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1356,7 +1556,7 @@ location / {
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">7</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
