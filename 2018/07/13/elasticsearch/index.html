@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="ccbeta&#39;s Home">
 <meta property="og:description" content="wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.2.2.tar.gz wget https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-6.2.2-linux-x86_64.tar.gz wget https://artifact">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-07-13T04:00:00.639Z">
+<meta property="og:updated_time" content="2018-07-13T04:55:42.385Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="centos7 搭建ELK6.3.0实现SQL查询简单记录">
 <meta name="twitter:description" content="wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.2.2.tar.gz wget https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-6.2.2-linux-x86_64.tar.gz wget https://artifact">
@@ -340,6 +340,7 @@
 <p>input {<br>  beats {<br>    port =&gt; 5044<br>    codec =&gt; “json”<br>  }<br>}</p>
 <p>filter{<br>   if [logtype] {<br>     mutate { replace =&gt; { type =&gt; “%{logtype}” }}<br>   }else{<br>     mutate { replace =&gt; { type =&gt; ‘unknow’ }}<br>   }<br>   date {<br>     match =&gt; [ “createTime” , “yyyy-MM-dd HH:mm:ss” ]<br>   }<br>}</p>
 <p>output {<br>  elasticsearch {<br>    hosts =&gt; [“localhost:9200”]<br>    index =&gt; “logstash-%{type}-%{+YYYY.MM.dd}”<br>  }<br>  stdout { codec =&gt; rubydebug }<br>}</p>
+<p><a href="https://www.dbvis.com" target="_blank" rel="noopener">https://www.dbvis.com</a></p>
 
       
     </div>
@@ -364,8 +365,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/07/07/centos7-ELK/" rel="next" title="centos7 安装 ELK">
-                <i class="fa fa-chevron-left"></i> centos7 安装 ELK
+              <a href="/2018/06/20/centos7-alisql/" rel="next" title="centos7 安装 AliSQL">
+                <i class="fa fa-chevron-left"></i> centos7 安装 AliSQL
               </a>
             
           </div>
@@ -449,7 +450,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
