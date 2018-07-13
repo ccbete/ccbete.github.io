@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="tengine," />
+  <meta name="keywords" content="Hexo, NexT" />
 
 
 
@@ -79,18 +79,17 @@
 
 
 
-<meta name="description" content="1、通过yum 命令安装基础环境: yum -y install wget unzip vim lsof libjpeg libjpeg-devel libpng libpng-devel freetype freetype-devel gd-devel openssl openssl-devel zlib zlib-devel pcre pcre-devel gcc gcc-c++ ncurse">
-<meta name="keywords" content="tengine">
+<meta name="description" content="wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.2.2.tar.gz wget https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-6.2.2-linux-x86_64.tar.gz wget https://artifact">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Centos 搭建 Tengine Web 服务器高性能访问">
-<meta property="og:url" content="http://yoursite.com/2018/06/11/nginx/index.html">
+<meta property="og:title" content="centos7 搭建ELK6.3.0实现SQL查询简单记录">
+<meta property="og:url" content="http://yoursite.com/2018/07/13/elasticsearch/index.html">
 <meta property="og:site_name" content="ccbeta&#39;s Home">
-<meta property="og:description" content="1、通过yum 命令安装基础环境: yum -y install wget unzip vim lsof libjpeg libjpeg-devel libpng libpng-devel freetype freetype-devel gd-devel openssl openssl-devel zlib zlib-devel pcre pcre-devel gcc gcc-c++ ncurse">
+<meta property="og:description" content="wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.2.2.tar.gz wget https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-6.2.2-linux-x86_64.tar.gz wget https://artifact">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-06-16T02:26:18.020Z">
+<meta property="og:updated_time" content="2018-07-13T04:00:00.639Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Centos 搭建 Tengine Web 服务器高性能访问">
-<meta name="twitter:description" content="1、通过yum 命令安装基础环境: yum -y install wget unzip vim lsof libjpeg libjpeg-devel libpng libpng-devel freetype freetype-devel gd-devel openssl openssl-devel zlib zlib-devel pcre pcre-devel gcc gcc-c++ ncurse">
+<meta name="twitter:title" content="centos7 搭建ELK6.3.0实现SQL查询简单记录">
+<meta name="twitter:description" content="wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.2.2.tar.gz wget https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-6.2.2-linux-x86_64.tar.gz wget https://artifact">
 
 
 
@@ -120,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/06/11/nginx/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/07/13/elasticsearch/"/>
 
 
 
 
 
-  <title>Centos 搭建 Tengine Web 服务器高性能访问 | ccbeta's Home</title>
+  <title>centos7 搭建ELK6.3.0实现SQL查询简单记录 | ccbeta's Home</title>
   
 
 
@@ -233,7 +232,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/11/nginx/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/13/elasticsearch/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="ccbeta">
@@ -250,7 +249,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Centos 搭建 Tengine Web 服务器高性能访问</h1>
+          <h1 class="post-title" itemprop="name headline">centos7 搭建ELK6.3.0实现SQL查询简单记录</h1>
         
 
         <div class="post-meta">
@@ -262,8 +261,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-11T16:47:15+08:00">
-                2018-06-11
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-13T11:56:27+08:00">
+                2018-07-13
               </time>
             
 
@@ -300,201 +299,47 @@
       
 
       
-        <p>1、通过yum 命令安装基础环境:</p>
-<pre><code>yum -y install wget unzip vim lsof libjpeg libjpeg-devel libpng libpng-devel freetype freetype-devel gd-devel openssl openssl-devel zlib zlib-devel pcre pcre-devel gcc gcc-c++ ncurses-devel perl
-</code></pre><p>2、下载Tengine压缩包: wget <a href="http://tengine.taobao.org/download/tengine-2.2.2.tar.gz" target="_blank" rel="noopener">http://tengine.taobao.org/download/tengine-2.2.2.tar.gz</a> </p>
-<pre><code>tar xf tengine-2.2.2.tar.gz &amp;&amp; cd tengine-2.2.2
-</code></pre><p>3、具体安装步骤:</p>
-<pre><code>3.1、编译Tengine 多个特性，合并多个文件为一个请求，去掉HTML空格,及图片处理:
-
-3.2、建立相关文件夹： mkdir -p /var/temp/nginx/client &amp;&amp; 
-
-3.3、运行编译命令:  firewall-cmd --zone=public --add-port=80/tcp --permanent &amp;&amp; firewall-cmd --zone=public --add-port=443/tcp --permanent &amp;&amp; firewall-cmd --reload #开放80、443端口
-
-    groupadd www -- 添加用户www
-
-    useradd -s /sbin/nologin -g www www
-
-    ./configure --user=www --group=www --prefix=/usr/local/nginx --conf-path=/usr/local/nginx/conf/nginx.conf --pid-path=/usr/local/nginx/logs/nginx.pid --lock-path=/var/lock/nginx.lock --error-log-path=/var/log/nginx/error.log --http-log-path=/var/log/nginx/access.log --with-http_gzip_static_module --http-client-body-temp-path=/var/temp/nginx/client --http-proxy-temp-path=/var/temp/nginx/proxy --http-fastcgi-temp-path=/var/temp/nginx/fastcgi --http-uwsgi-temp-path=/var/temp/nginx/uwsgi --http-scgi-temp-path=/var/temp/nginx/scgi --with-http_concat_module --with-http_sub_module=shared --with-http_upstream_check_module --with-http_image_filter_module --with-http_trim_filter_module=shared;
-
-    make &amp;&amp; make install
-
-3.3、修改nginx配置文件: cd /usr/local/nginx/conf &amp;&amp; mv nginx.conf nginx.conf.bak
-
-    vim nginx.conf
-
-3.4、nginx.conf配置文件如下：
-
-    user  www www;
-    worker_processes  auto; #建议为cpu核心数+2
-
-    error_log  /webdata/logs/nginx_error.log  crit;
-
-    pid        /usr/local/nginx/logs/nginx.pid;
-
-    worker_rlimit_nofile 65535;
-
-    events {
-        use epoll;
-        multi_accept on;
-        worker_connections  65535;
-    }
-
-
-    http {
-        include       mime.types;
-        default_type  application/octet-stream;
-
-        limit_conn_zone $binary_remote_addr zone=addr:1m;
-        limit_req_zone $binary_remote_addr zone=one:1m rate=1r/s;
-
-        server_names_hash_bucket_size 128;
-        client_header_buffer_size 32k;
-        large_client_header_buffers 4 32k;
-        client_max_body_size 50m;
-
-        sendfile on; 
-        tcp_nopush on; 
-        tcp_nodelay on;  
-        keepalive_timeout 60;
-        types_hash_max_size 2048;
-
-        concat on;
-        concat_max_files 20;
-        concat_unique on;
-        concat_delimiter &quot;\r\n&quot;;
-        concat_ignore_file_error on;
-
-        gzip on;
-        gzip_min_length 1k;
-        gzip_disable  &quot;MSIE [1-6]\.&quot;;
-        gzip_vary on;
-        gzip_proxied   any;
-        gzip_comp_level 6;
-        gzip_buffers     4 16k;
-        gzip_http_version 1.1;
-        gzip_types   text/plain  text/css  application/json  application/x-javascript  text/xml  application/xml  text/text/javascript;
-
-        # php 的 fastcgi配置
-        #
-        # fastcgi_connect_timeout 300;
-        # fastcgi_send_timeout 300;
-        # fastcgi_read_timeout 300;
-        # fastcgi_buffer_size 64k;
-        # fastcgi_buffers 4 64k;
-        # fastcgi_busy_buffers_size 128k;
-        # fastcgi_temp_file_write_size 256k;
-        #
-
-        proxy_redirect off;
-        proxy_set_header Host $host;
-        proxy_set_header X-real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        client_body_buffer_size 128k;
-        proxy_connect_timeout 90;
-        proxy_read_timeout 90;
-        proxy_buffer_size 4k;
-        proxy_buffers 6 32k;
-        proxy_busy_buffers_size 64k;
-        proxy_temp_file_write_size 64k;  
-        proxy_http_version 1.1;
-        proxy_set_header Connection &quot;&quot;;
-
-        #后端采用多台tomcat 负载
-        #nginx+tomcat+redis实现session共享解决后端多台tomcat负载session问题
-        #采用ip 固定访问后端不同的tomcat服务器
-
-       #  upstream tomcat_server{ 
-       #     ip_hash; 
-       #     server 192.168.10.137;
-       #      server 192.168.10.138;
-       #     server 192.168.10.139;
-       #     server 192.168.10.140;
-       # }
-
-        # 配置默认80端口访问重定向到https
-
-        server {
-            listen       80;
-            server_name 192.168.1.1; 
-            rewrite ^/(.*) https://aaa.com/$1 permanent;  
-        }
-
-        server {
-            listen       80;
-            server_name aaa.com; 
-            rewrite ^/(.*) https://aaa.com/$1 permanent;  
-        }
-
-        server {
-
-            listen 443 default_server ssl;
-            ssl on;
-            ssl_certificate            /usr/local/nginx/ssl/web.pem;
-            ssl_certificate_key        /usr/local/nginx/ssl/web.key;
-            ssl_protocols              TLSv1 TLSv1.1 TLSv1.2;
-            ssl_session_cache          shared:SSL:10m;
-            ssl_session_timeout        10m;
-            #优化：Nginx默认使用DHE算法来产生密匙，该加密算法效率很低。可以通过如下命令，删掉了kEDH算法。
-            ssl_ciphers ALL:!kEDH!ADH:RC4+RSA:+HIGH:+EXP;    
-            ssl_prefer_server_ciphers       on;
-
-
-            server_name aa.com;
-            index index.html index.htm;
-            root  /webdata/wwwroot/website/root;
-
-            error_page   404   /webdata/wwwroot/website/root/error.html;
-
-            location ~ \.(html|js|css|gif|jpg|png|bmp|swf)$ {        
-                expires 30d; 
-            }  
-
-            location /js/ {
-                concat on;
-                concat_max_files 20;
-            }
-
-            location /css/ {
-                concat on;
-                concat_max_files 20;
-            }
-
-           #请求转发给后台tomcat
-           # location / {
-           #     proxy_http_version 1.1;
-           #     proxy_set_header Connection &quot;&quot;;
-           #     proxy_pass http://tomcat_server;
-           # }
-
-            access_log  /webdata/logs/access.log;    
-        }        
-    }
-
-    至此，nginx 配置结束
-
-3.5:添加nginx开机启动： cd /usr/lib/systemd/system/ &amp;&amp; vim nginx.service
-
-    [Unit]    
-    Description=nginx    
-    After=network.target    
-
-    [Service]    
-    Type=forking    
-    ExecStart=/usr/local/nginx/sbin/nginx   
-    ExecReload=/usr/local/nginx/sbin/nginx -s reload    
-    ExecStop=/usr/local/nginx/sbin/nginx -s stop  
-    PrivateTmp=true    
-
-    [Install]    
-    WantedBy=multi-user.target  
-
-    设置开机启动:
-
-    systemctl enable nginx.service
-
-    systemctl start nginx.service 
-</code></pre><p>至此nginx 安装配置结束，后面文章再介绍nginx+tomcat+redis实现session共享</p>
+        <p>wget <a href="https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.2.2.tar.gz" target="_blank" rel="noopener">https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.2.2.tar.gz</a></p>
+<p>wget <a href="https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-6.2.2-linux-x86_64.tar.gz" target="_blank" rel="noopener">https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-6.2.2-linux-x86_64.tar.gz</a></p>
+<p>wget <a href="https://artifacts.elastic.co/downloads/logstash/logstash-6.2.2.tar.gz" target="_blank" rel="noopener">https://artifacts.elastic.co/downloads/logstash/logstash-6.2.2.tar.gz</a></p>
+<p>wget <a href="https://artifacts.elastic.co/downloads/kibana/kibana-6.2.2-linux-x86_64.tar.gz" target="_blank" rel="noopener">https://artifacts.elastic.co/downloads/kibana/kibana-6.2.2-linux-x86_64.tar.gz</a></p>
+<p>export JAVA_HOME=/usr/local/java/jdk1.8.0_171/<br>export JRE_HOME=$JAVA_HOME/jre<br>export CLASSPATH=$JAVA_HOME/lib:$JRE_HOME/lib:$CLASSPATH<br>export PATH=$JAVA_HOME/bin:$JRE_HOME/bin:$PATH </p>
+<p>firewall-cmd –zone=public –add-port=9200/tcp –permanent<br>firewall-cmd –reload</p>
+<p>tar xf elasticsearch-6.2.2.tar.gz &amp;&amp; cp -R elasticsearch-6.2.2 /usr/local/elasticsearch &amp;&amp; cd /usr/local/elasticsearch</p>
+<p>groupadd elastic</p>
+<p>useradd elastic -g elastic -p /usr/local/elasticsearch</p>
+<p>chown elastic.elastic /usr/local/elasticsearch -R</p>
+<p>chown elastic.elastic /var/log/elasticsearch -R</p>
+<p>vim config/elasticsearch.yml</p>
+<p>去掉一下前面的＃号</p>
+<p>network.host: 0.0.0.0<br>http.port: 9200</p>
+<p>vim /etc/sysctl.conf</p>
+<p>vm.max_map_count=655360<br>fs.file-max=655360</p>
+<p>sysctl -p</p>
+<p>vim /etc/security/limits.conf</p>
+<ul>
+<li>soft nofile 65536</li>
+<li>hard nofile 131072</li>
+<li>soft nproc 2048</li>
+<li>hard nproc 4096</li>
+</ul>
+<p>jar -xvf x-pack-core-6.3.0.jar </p>
+<p>javac -cp “/usr/local/elasticsearch/modules/x-pack/x-pack-core/x-pack-core-6.3.0.jar:/usr/local/elasticsearch/lib/lucene-core-7.3.1.jar:/usr/local/elasticsearch/lib/elasticsearch-6.3.0.jar:/usr/local/elasticsearch/lib/elasticsearch-core-6.3.0.jar” /root/LicenseVerifier.java</p>
+<p>javac -cp “/usr/local/elasticsearch/modules/x-pack/x-pack-core/x-pack-core-6.3.0.jar:/usr/local/elasticsearch/lib/lucene-core-7.3.1.jar:/usr/local/elasticsearch/lib/elasticsearch-6.3.0.jar:/usr/local/elasticsearch/lib/elasticsearch-core-6.3.0.jar” XPackBuild.java </p>
+<p>cd x-pack-core-6.3.0<br>jar -cvf x-pack-core-6.3.0.jar ./*</p>
+<p>cp x-pack-core-6.3.0.jar /usr/local/elasticsearch/modules/x-pack/x-pack-core/</p>
+<p>xpack.security.enabled: false</p>
+<p>官方申请试用key后，再修改 <a href="https://license.elastic.co/registration" target="_blank" rel="noopener">https://license.elastic.co/registration</a></p>
+<p>“type”:”platinum”,”expiry_date_in_millis”:2775355932000</p>
+<p>curl -H “Content-Type: application/json” -XPOST -u elastic <a href="http://127.0.0.1:9200/_xpack/license" target="_blank" rel="noopener">http://127.0.0.1:9200/_xpack/license</a> -d @/root/aa.json</p>
+<p>xpack.security.enabled: true<br>xpack.security.transport.ssl.enabled: true</p>
+<p>#!bin/bash</p>
+<h1 id="chkconfig-2345-21-89"><a href="#chkconfig-2345-21-89" class="headerlink" title="chkconfig:   2345 21  89"></a>chkconfig:   2345 21  89</h1><h1 id="description-elasticsearch"><a href="#description-elasticsearch" class="headerlink" title="description:  elasticsearch"></a>description:  elasticsearch</h1><p>JAVA_HOME=/usr/local/java/jdk1.8.0_171<br>ES_HOME=/usr/local/elasticsearch<br>case $1 in<br>          start) sudo -iu elastic /usr/local/elasticsearch/bin/elasticsearch &amp;;<br>          *)  echo “require start”  ;;<br>esac</p>
+<p>chkconfig –add kibana</p>
+<p>logstash: default.conf</p>
+<p>input {<br>  beats {<br>    port =&gt; 5044<br>    codec =&gt; “json”<br>  }<br>}</p>
+<p>filter{<br>   if [logtype] {<br>     mutate { replace =&gt; { type =&gt; “%{logtype}” }}<br>   }else{<br>     mutate { replace =&gt; { type =&gt; ‘unknow’ }}<br>   }<br>   date {<br>     match =&gt; [ “createTime” , “yyyy-MM-dd HH:mm:ss” ]<br>   }<br>}</p>
+<p>output {<br>  elasticsearch {<br>    hosts =&gt; [“localhost:9200”]<br>    index =&gt; “logstash-%{type}-%{+YYYY.MM.dd}”<br>  }<br>  stdout { codec =&gt; rubydebug }<br>}</p>
 
       
     </div>
@@ -510,12 +355,6 @@
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/tengine/" rel="tag"># tengine</a>
-          
-        </div>
-      
 
       
       
@@ -525,8 +364,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/05/31/hello-world/" rel="next" title="Hello World">
-                <i class="fa fa-chevron-left"></i> Hello World
+              <a href="/2018/07/07/centos7-ELK/" rel="next" title="centos7 安装 ELK">
+                <i class="fa fa-chevron-left"></i> centos7 安装 ELK
               </a>
             
           </div>
@@ -534,10 +373,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/06/11/nginx-tomcat/" rel="prev" title="nginx+tomcat+redis实现多台tomcat服务器session共享">
-                nginx+tomcat+redis实现多台tomcat服务器session共享 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -589,8 +424,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -641,6 +485,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#chkconfig-2345-21-89"><span class="nav-number">1.</span> <span class="nav-text">chkconfig:   2345 21  89</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#description-elasticsearch"><span class="nav-number">2.</span> <span class="nav-text">description:  elasticsearch</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
