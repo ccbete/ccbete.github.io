@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="ccbeta&#39;s Home">
 <meta property="og:description" content="1、通过yum 命令安装基础环境: yum -y install wget unzip vim lsof libjpeg libjpeg-devel libpng libpng-devel freetype freetype-devel gd-devel openssl openssl-devel zlib zlib-devel pcre pcre-devel gcc gcc-c++ ncurse">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-06-16T02:26:18.020Z">
+<meta property="og:updated_time" content="2018-07-19T02:54:53.115Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Centos 搭建 Tengine Web 服务器高性能访问">
 <meta name="twitter:description" content="1、通过yum 命令安装基础环境: yum -y install wget unzip vim lsof libjpeg libjpeg-devel libpng libpng-devel freetype freetype-devel gd-devel openssl openssl-devel zlib zlib-devel pcre pcre-devel gcc gcc-c++ ncurse">
@@ -307,15 +307,16 @@
 </code></pre><p>3、具体安装步骤:</p>
 <pre><code>3.1、编译Tengine 多个特性，合并多个文件为一个请求，去掉HTML空格,及图片处理:
 
-3.2、建立相关文件夹： mkdir -p /var/temp/nginx/client &amp;&amp; 
+3.2、建立相关文件夹：  
 
-3.3、运行编译命令:  firewall-cmd --zone=public --add-port=80/tcp --permanent &amp;&amp; firewall-cmd --zone=public --add-port=443/tcp --permanent &amp;&amp; firewall-cmd --reload #开放80、443端口
+3.3、运行编译命令:  
+        firewall-cmd --zone=public --add-port=80/tcp --permanent &amp;&amp; firewall-cmd --zone=public --add-port=443/tcp --permanent &amp;&amp; firewall-cmd --reload  #开放80、443端口
 
     groupadd www -- 添加用户www
 
     useradd -s /sbin/nologin -g www www
 
-    ./configure --user=www --group=www --prefix=/usr/local/nginx --conf-path=/usr/local/nginx/conf/nginx.conf --pid-path=/usr/local/nginx/logs/nginx.pid --lock-path=/var/lock/nginx.lock --error-log-path=/var/log/nginx/error.log --http-log-path=/var/log/nginx/access.log --with-http_gzip_static_module --http-client-body-temp-path=/var/temp/nginx/client --http-proxy-temp-path=/var/temp/nginx/proxy --http-fastcgi-temp-path=/var/temp/nginx/fastcgi --http-uwsgi-temp-path=/var/temp/nginx/uwsgi --http-scgi-temp-path=/var/temp/nginx/scgi --with-http_concat_module --with-http_sub_module=shared --with-http_upstream_check_module --with-http_image_filter_module --with-http_trim_filter_module=shared;
+    ./configure --user=www --group=www --prefix=/usr/local/nginx --with-http_gzip_static_module --with-http_concat_module --with-http_upstream_check_module --with-http_image_filter_module --with-http_trim_filter_module=shared --with-http_stub_status_module --with-http_ssl_module --with-http_v2_module --with-ipv6 --with-http_sub_module=shared;
 
     make &amp;&amp; make install
 

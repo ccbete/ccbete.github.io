@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="ccbeta&#39;s Home">
 <meta property="og:description" content="wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.2.2.tar.gz wget https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-6.2.2-linux-x86_64.tar.gz wget https://artifact">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-07-13T04:55:42.385Z">
+<meta property="og:updated_time" content="2018-07-19T02:54:08.059Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="centos7 搭建ELK6.3.0实现SQL查询简单记录">
 <meta name="twitter:description" content="wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.2.2.tar.gz wget https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-6.2.2-linux-x86_64.tar.gz wget https://artifact">
@@ -307,9 +307,10 @@
 <p>firewall-cmd –zone=public –add-port=9200/tcp –permanent<br>firewall-cmd –reload</p>
 <p>tar xf elasticsearch-6.2.2.tar.gz &amp;&amp; cp -R elasticsearch-6.2.2 /usr/local/elasticsearch &amp;&amp; cd /usr/local/elasticsearch</p>
 <p>groupadd elastic</p>
+<p>mkdir -p /var/logs/elasticsearch</p>
 <p>useradd elastic -g elastic -p /usr/local/elasticsearch</p>
 <p>chown elastic.elastic /usr/local/elasticsearch -R</p>
-<p>chown elastic.elastic /var/log/elasticsearch -R</p>
+<p>chown elastic.elastic /var/logs/elasticsearch -R</p>
 <p>vim config/elasticsearch.yml</p>
 <p>去掉一下前面的＃号</p>
 <p>network.host: 0.0.0.0<br>http.port: 9200</p>
