@@ -79,13 +79,17 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="ccbeta&#39;s Home">
-<meta property="og:url" content="http://yoursite.com/archives/index.html">
+<meta name="description" content="tomcat ssl证书最为麻烦。由于cloudflare生成证书的并没有jks及keystore格式，所以需要进行格式转换，又因为pem不能直接转成jks格式。需要绕道在服务器生成jks文件及csr文件，再拿csr文件去cloudflare换取证书密钥。还得把生成出来的证书转换成X.509格式才能导入到服务器中。这里是个大坑啊。服务器生成私钥文件的命令：  keytool -genkey -a">
+<meta property="og:type" content="article">
+<meta property="og:title" content="申请cloudflare的ssl证书及tomcat配置">
+<meta property="og:url" content="http://yoursite.com/2018/07/19/tomcat-ssl/index.html">
 <meta property="og:site_name" content="ccbeta&#39;s Home">
+<meta property="og:description" content="tomcat ssl证书最为麻烦。由于cloudflare生成证书的并没有jks及keystore格式，所以需要进行格式转换，又因为pem不能直接转成jks格式。需要绕道在服务器生成jks文件及csr文件，再拿csr文件去cloudflare换取证书密钥。还得把生成出来的证书转换成X.509格式才能导入到服务器中。这里是个大坑啊。服务器生成私钥文件的命令：  keytool -genkey -a">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-07-19T09:49:39.150Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ccbeta&#39;s Home">
+<meta name="twitter:title" content="申请cloudflare的ssl证书及tomcat配置">
+<meta name="twitter:description" content="tomcat ssl证书最为麻烦。由于cloudflare生成证书的并没有jks及keystore格式，所以需要进行格式转换，又因为pem不能直接转成jks格式。需要绕道在服务器生成jks文件及csr文件，再拿csr文件去cloudflare换取证书密钥。还得把生成出来的证书转换成X.509格式才能导入到服务器中。这里是个大坑啊。服务器生成私钥文件的命令：  keytool -genkey -a">
 
 
 
@@ -115,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/archives/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/07/19/tomcat-ssl/"/>
 
 
 
 
 
-  <title>归档 | ccbeta's Home</title>
+  <title>申请cloudflare的ssl证书及tomcat配置 | ccbeta's Home</title>
   
 
 
@@ -140,7 +144,7 @@
     
   
 
-  <div class="container sidebar-position-left page-archive">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -214,370 +218,160 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
+  <div id="posts" class="posts-expand">
+    
 
-      <span class="archive-page-counter">
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/19/tomcat-ssl/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ccbeta">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ccbeta's Home">
+    </span>
+
+    
+      <header class="post-header">
+
         
         
+          <h1 class="post-title" itemprop="name headline">申请cloudflare的ssl证书及tomcat配置</h1>
         
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-19T17:31:30+08:00">
+                2018-07-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
           
-        
-        嗯..! 目前共计 9 篇日志。 继续努力。
-      </span>
 
-      
-
-        
-        
-        
-
-        
           
-          <div class="collection-title">
-            <h1 class="archive-year" id="archive-year-2018">2018</h1>
-          </div>
-        
-        
+            
+          
 
-        
+          
+          
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+          
 
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/07/19/tomcat-ssl/" itemprop="url">
-              
-                <span itemprop="name">申请cloudflare的ssl证书及tomcat配置</span>
-              
-            </a>
-        
-      </h2>
+          
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-07-19T17:31:30+08:00"
-              content="2018-07-19" >
-          07-19
-        </time>
-      </div>
+          
 
-    </header>
-  </article>
+        </div>
+      </header>
+    
 
-
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/07/13/elasticsearch/" itemprop="url">
-              
-                <span itemprop="name">centos7 搭建ELK6.3.0实现SQL查询简单记录</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-07-13T11:56:27+08:00"
-              content="2018-07-13" >
-          07-13
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
       
 
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/06/20/centos7-alisql/" itemprop="url">
-              
-                <span itemprop="name">centos7 安装 AliSQL</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-06-20T11:34:10+08:00"
-              content="2018-06-20" >
-          06-20
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
       
+        <p> tomcat ssl证书最为麻烦。由于cloudflare生成证书的并没有jks及keystore格式，所以需要进行格式转换，又因为pem不能直接转成jks格式。需要绕道在服务器生成jks文件及csr文件，再拿csr文件去cloudflare换取证书密钥。还得把生成出来的证书转换成X.509格式才能导入到服务器中。这里是个大坑啊。服务器生成私钥文件的命令：</p>
+<p> keytool -genkey -alias test -validity 3650 -keyalg RSA -keysize 2048 -keystore DigiCertECCSecureServerCA.jks -dname “CN=DigiCertECCSecureServerCA,OU=Cloudflare Inc, O=DigiCert Inc, L=San Francisco, ST=California, C=US” &amp;&amp; keytool -certreq -alias test -file DigiCertECCSecureServerCA.csr -keystore DigiCertECCSecureServerCA.jks </p>
+<p>执行导入命令。这里也有一个坑。alias 后面的名字要和申请的一样，如果导入证书报错。需要修改这里的名字，并且tomcat的server.xml的里的名字必须跟这里一样。不然tomcat启动会报ssl证书错误。</p>
+<p>keytool -import -alias testaa -file cert.cer -keystore DigiCertECCSecureServerCA.jks</p>
+<p>tomcat 8.5版本以下的配置。据说8.5版本以上还有另外配置。哎，tomcat搞个证书真是麻烦。</p>
+<connector port="443" maxhttpheadersize="8192" maxthreads="150" minsparethreads="25" maxsparethreads="75" enablelookups="false" disableuploadtimeout="true" acceptcount="100" scheme="https" secure="true" sslenabled="true" clientauth="false" sslprotocol="TLS" keyalias="testaa" keystorefile="/root/ssl/DigiCertECCSecureServerCA.jks" keystorepass="123456">
 
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/06/16/kms-server/" itemprop="url">
-              
-                <span itemprop="name">自建KMS激活服务器的两种方法</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-06-16T14:06:52+08:00"
-              content="2018-06-16" >
-          06-16
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
+<p>以下配置是通用的<br><!-- <Connector port="443" protocol="org.apache.coyote.http11.Http11Protocol"
+             maxThreads="150" SSLEnabled="true" scheme="https" secure="true"
+             keystoreFile="/root/ssl/DigiCertECCSecureServerCA.jks" keystorePass="123456"
+             clientAuth="false" sslProtocol="TLS"
+             ciphers="TLS_RSA_WITH_AES_128_GCM_SHA256,
+             TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
+             TLS_RSA_WITH_AES_128_CBC_SHA,
+             TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA,
+             TLS_RSA_WITH_AES_128_CBC_SHA256,
+             TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,
+             SSL_RSA_WITH_3DES_EDE_CBC_SHA,
+             TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA" /> --></p>
+<p>最后，cloudflare SSL模式必须配置成full.如果为Full (strict)。 cloudflare 会报 ssl证书错误。不说了，太多坑了。还是nginx方便。</p>
+</connector>
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/06/13/redis/" itemprop="url">
-              
-                <span itemprop="name">centos 7 安装redis 4.0.9</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-06-13T11:41:00+08:00"
-              content="2018-06-13" >
-          06-13
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/06/11/fastdfs/" itemprop="url">
-              
-                <span itemprop="name">未命名</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-06-11T17:46:13+08:00"
-              content="2018-06-11" >
-          06-11
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/06/11/nginx-tomcat/" itemprop="url">
-              
-                <span itemprop="name">nginx+tomcat+redis实现多台tomcat服务器session共享</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-06-11T16:53:20+08:00"
-              content="2018-06-11" >
-          06-11
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/06/11/nginx/" itemprop="url">
-              
-                <span itemprop="name">Centos 搭建 Tengine Web 服务器高性能访问</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-06-11T16:47:15+08:00"
-              content="2018-06-11" >
-          06-11
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/05/31/hello-world/" itemprop="url">
-              
-                <span itemprop="name">Hello World</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-05-31T14:23:33+08:00"
-              content="2018-05-31" >
-          05-31
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
     </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/13/elasticsearch/" rel="next" title="centos7 搭建ELK6.3.0实现SQL查询简单记录">
+                <i class="fa fa-chevron-left"></i> centos7 搭建ELK6.3.0实现SQL查询简单记录
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -585,6 +379,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -790,6 +588,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
